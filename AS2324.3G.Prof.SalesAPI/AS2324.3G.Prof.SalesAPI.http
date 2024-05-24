@@ -1,0 +1,6 @@
+@AS2324._3G.Prof.SalesAPI_HostAddress = http://localhost:5219
+
+GET {{AS2324._3G.Prof.SalesAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
