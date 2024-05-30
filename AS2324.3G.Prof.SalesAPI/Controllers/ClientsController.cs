@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System.Data.SQLite;
 
@@ -6,6 +7,26 @@ namespace AS2324._3G.Prof.SalesAPI.Controllers
 {
     public class ClientsController : Controller
     {
+        private readonly IWebHostEnvironment _webHostEnvironment;
+
+        string strConn = "";
+
+        public ClientsController(IWebHostEnvironment webHostEnvironment)
+        {
+            // https://stackoverflow.com/questions/49398965/what-is-the-equivalent-of-server-mappath-in-asp-net-core
+            _webHostEnvironment = webHostEnvironment;
+
+            string webRootPath = _webHostEnvironment.WebRootPath;
+            string contentRootPath = _webHostEnvironment.ContentRootPath;
+
+            string file = "";
+
+            file = Path.Combine(contentRootPath, "Database", "northwindITA.db");
+
+            // connessione al DB in SQL Lite (vedi www.connectionstrings.com)
+            strConn = @"Data Source=" + file + ";Pooling=false;Synchronous=Full;";
+        }
+
         [HttpGet("GetClients")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataTable))]
         public JsonResult GetClients()
@@ -13,11 +34,6 @@ namespace AS2324._3G.Prof.SalesAPI.Controllers
             DataTable? dtbClients = null;
 
             string query = "";
-            string file = "C:\\Appl\\Scuola\\AS_2023_2024\\3G\\AS2324.3G.Prof.SalesAPI\\AS2324.3G.Prof.SalesAPI\\Database\\northwindITA.db";
-            string strConn = "";
-
-            // connessione al DB in SQL Lite (vedi www.connectionstrings.com)
-            strConn = @"Data Source=" + file + ";Pooling=false;Synchronous=Full;";
 
             try
             {
