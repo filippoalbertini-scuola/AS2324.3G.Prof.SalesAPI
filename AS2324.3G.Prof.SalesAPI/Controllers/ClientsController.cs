@@ -19,29 +19,38 @@ namespace AS2324._3G.Prof.SalesAPI.Controllers
             // connessione al DB in SQL Lite (vedi www.connectionstrings.com)
             strConn = @"Data Source=" + file + ";Pooling=false;Synchronous=Full;";
 
-            SQLiteConnection conn = new SQLiteConnection(strConn);
-            conn.Open();
+            try
+            {
 
-            // carico il data table clienti
+                SQLiteConnection conn = new SQLiteConnection(strConn);
+                conn.Open();
 
-            // prepara la QUERY
-            query = "";
-            query = query + "SELECT ";
-            query = query + "   IdCliente, NomeSocieta, Indirizzo ";
-            query = query + "FROM ";
-            query = query + "   Clienti ";
+                // carico il data table clienti
 
-            // crea DataAdapter
-            SQLiteDataAdapter da = new SQLiteDataAdapter(query, conn);
+                // prepara la QUERY
+                query = "";
+                query = query + "SELECT ";
+                query = query + "   IdCliente, NomeSocieta, Indirizzo ";
+                query = query + "FROM ";
+                query = query + "   Clienti ";
 
-            // popola il DataTable con DataAdapter 
-            dtbClients = new DataTable();
-            da.Fill(dtbClients);
+                // crea DataAdapter
+                SQLiteDataAdapter da = new SQLiteDataAdapter(query, conn);
 
-            conn.Close();
+                // popola il DataTable con DataAdapter 
+                dtbClients = new DataTable();
+                da.Fill(dtbClients);
 
+                conn.Close();
 
-            return Json(new { status="OK", output = dtbClients });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return Json(new { status = "KO", output = ex.Message });
+            }
+
+            return Json(new { status = "OK", output = dtbClients });
             //return Json(dtbClients);
         }
     }
